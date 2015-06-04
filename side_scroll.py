@@ -17,6 +17,10 @@ class Green(Actor):
         self.y = random.randint(0, HEIGHT)
 
     def tick(self):
+        i = self.collidelist(projectiles)
+        if i != -1:
+            enemies.remove(self)
+            del projectiles[i]
         self.x -= 5
 
 
