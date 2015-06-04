@@ -13,57 +13,47 @@ class Green(Actor):
 
     def __init__(self, img='happy_green_guy'):
         super().__init__(img)
-        self._hash_from = object()
         self.x = WIDTH-10
         self.y = random.randint(0, HEIGHT)
 
-    def __hash__(self):
-        return hash(self._hash_from)
-
     def tick(self):
         self.x -= 5
-        self.draw()
 
 
-enemies = {Green()}
+enemies = []
 projectiles = []
 
 
 def draw():
-    global t
-
-    t += 1
-
-    if t % 50 == 0:
-        enemies.add(Green())
-
     screen.clear()
 
-    to_remove = set()
-
     for enemy in enemies:
-        enemy.tick()
+        enemy.draw()
 
-        if enemy.x < 10:
-            to_remove.add(enemy)
-
-    for enemy in to_remove:
-        enemies.remove(enemy)
-
-    to_remove = []
-
-    for i, projectile in enumerate(projectiles):
-        projectile.x += 10
-        if projectile.x > WIDTH:
-            to_remove.append(i)
+    for projectile in projectiles:
         projectile.draw()
-
-    for i in reversed(to_remove):
-        del projectiles[i]
 
     player.draw()
 
 def update():
+    global t
+
+    if t % 50 == 0:
+        enemies.append(Green())
+
+    t += 1
+
+    for enemy in enemies.copy():
+        enemy.tick()
+        if enemy.right < 0:
+            enemies.remove(enemy)
+
+
+    for projectile in projectiles.copy():
+        projectile.x += 10
+        if projectile.left > WIDTH:
+            projectiles.remove(projectile)
+
     if keyboard.w:
         player.y -= 20
     elif keyboard.s:
