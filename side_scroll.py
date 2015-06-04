@@ -50,10 +50,21 @@ def draw():
     for enemy in to_remove:
         enemies.remove(enemy)
 
+    to_remove = []
+
+    for i, projectile in enumerate(projectiles):
+        projectile.x += 10
+        if projectile.x > WIDTH:
+            to_remove.append(i)
+        projectile.draw()
+
+    for i in reversed(to_remove):
+        del projectiles[i]
+
     player.draw()
 
 def update():
-    if keyboard.w :
+    if keyboard.w:
         player.y -= 20
     elif keyboard.s:
         player.y += 20
@@ -63,7 +74,13 @@ def update():
     elif player.y > HEIGHT:
         player.y = HEIGHT
 
-
+def on_key_down(key):
+    
+    if key == keys.SPACE:
+        projectile = Actor('evil_blob')
+        projectile.x = 20
+        projectile.y = player.y
+        projectiles.append(projectile)
 
 
 
